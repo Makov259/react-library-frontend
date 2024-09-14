@@ -1,0 +1,7 @@
+container mt-5 - a basic container with margin top 5 
+homepage-carousel-title - from app.css file
+carousel - marks this as carousel 
+carousel-dark  - darkens the carousel layout
+slide - allows sliding in the carousel 
+d-none - display none - dont display on any screen size
+d-lg-block - show the element only on large screens or higher
