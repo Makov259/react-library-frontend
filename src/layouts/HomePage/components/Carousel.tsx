@@ -55,7 +55,7 @@ export const Carousel = () => {
             setIsLoading(false);
             setHttpError(error.message);
         })
-    }, []);
+    }, []);// this [] at the end is called the dependecy array, which if empty, means that the logic inside the useEffect will run only once after the component renders
 
     if(isLoading){
         return(
