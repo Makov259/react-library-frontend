@@ -1,0 +1,145 @@
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+1.FIRST WE HAVE THE STATE-VARIABLES created by using the UseState React Hook. This is a dynamic way to create variables which when their state changes , they also change.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+2.NEXT WE HAVE THE USE-EFFECT-REACT-HOOK, which renders after the component loads for the first time and then it activates after the state variables in the dependency array change. Every time! In this case
+after the state variables - currentPage, searchUrl change the useEffect hook re-activates.
+2a.             const baseUrl: string = "http://localhost:8080/api/books"; //my spring api
+                let url: string = ''; // not const because we gonna change this frequently
+
+2b               if(searchUrl === ''){ //if the searchUrl is empty
+                              url = `${baseUrl}?page=${currentPage - 1}&size=${booksPerPage}`; //we set the main url that we are fetching to the base url + .....
+                          }else{
+                              url = baseUrl + searchUrl; // the main url is set to the base + what is in searchUrl
+                          }
+2c                const response = await fetch(url);
+                          //This line makes the network request to fetch data from the API.
+                          //fetch is a native JavaScript function that allows you to make HTTP requests.
+                          //Since fetch is asynchronous, I'm using the await keyword to wait for the request to complete and store the response.
+                          if(!response.ok){
+                              throw new Error('Something went wrong!');
+                          }
+                  const responseJson = await response.json();
+                          //This line parses the raw response you got from the fetch call and converts it into a JavaScript object Notation(json) that you can work with.
+                          //In this case, responseJson is the entire JSON object, including _embedded.
+
+                  const responseData = responseJson._embedded.books; //This line extracts the books array from the json's _embedded wrapper
+
+2d               setTotalAmountOfBooks(responseJson.page.totalElements);//?
+                            setTotalPages(responseJson.page.totalPages);//?
+
+2e                const loadedBooks: BookModel[] = [];  //we create a BookModel array to store the fetched book array from the API
+                              for(const key in responseData){
+                                  loadedBooks.push(
+                                      {
+                                      id: responseData[key].id,
+                                      title: responseData[key].title,
+                                      author: responseData[key].author,
+                                      description: responseData[key].description,
+                                      copies: responseData[key].copies,
+                                      copiesAvailable: responseData[key].copiesAvailable,
+                                      category: responseData[key].category,
+                                      img: responseData[key].img
+                                  }
+                                  )
+                              }//For each index (or book object), you're creating a new object that matches the structure of the BookModel class.
+                              //You're taking values like id, title, author, etc., from each book in responseData.
+                              setBooks(loadedBooks); // We set the UseState variable books to the fetched books from loadedBooks array we just filled in.
+                              setIsLoading(false);   //set the spinner to false so it doesnt spin when the component is loaded.
+
+2f                        fetchBooks().catch((error: any) => { //Catching any errors thrown from the  fetchBooks() function.
+                                      setIsLoading(false);
+                                      setHttpError(error.message);
+                                  })
+                                  window.scrollTo(0, 0); //scroll to the top after render every time.
+                              }, [currentPage, searchUrl]);// the dependency array - ,[], after every time currentPage or searchUrl changes, the useEffect is triggered again.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+3. THEN WE HAVE SOME USEFUL STUFF LIKE SPINNER LOADING DISPLAY AND ERROR MESSAGE DISPLAY ALSO, AND A HANDLE FUNCTION.
+
+3a.            if(isLoading){
+                       return(
+                           <SpinnerLoading/>
+                       )
+                   } //check whether isLoading is true, and if so , return/display the spinner component.
+                   if(httpError){
+                       return(
+                           <div className="container m-5">
+                               <p>{httpError}</p>
+                           </div>
+                       )
+                   }//if httpError is true , return/ display the error message.
+                   const searchHandleChange = () => {
+                       if(search === ''){
+                           setSearchUrl('');
+                       }else{
+                           setSearchUrl(`/search/findByTitleContaining?title=${search}&page=0&size=${booksPerPage}`);
+                       }
+                   }
+                   //checks if search(which i believe corresponds to the input field where you search) is empty and if so, set the searchUrl to nothing also ''.
+                   //if not empty, set the searchUrl to /search/findByTitleContaining?title=${search}&page=0&size=${booksPerPage} which is from my springBoot backend I believe.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+4. WE HAVE SOME PAGINATION LOGIC HERE
+
+4a              const indexOfLastBook: number = currentPage * booksPerPage; //?
+                 const indexOfFirstBook: number = indexOfLastBook - booksPerPage;//?
+                 let lastItem = booksPerPage * currentPage <= totalAmountOfBooks ? booksPerPage * currentPage : totalAmountOfBooks;//?
+                 const paginate = (pageNumber: number) => setcurrentPage(pageNumber); //?
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+5. LASTLY WE HAVE THE JSX SECTION!!!
+
+5a                   return (
+                         <div>
+                           <div className="container"> //main Bootstrap wrapper , container(or container-fluid in other cases)
+                             <div> //we put everything in a normal div
+                                 <div className="row mt-5">  //this is using the Bootstrap grid system, container, then row, then column, mt-5(margin top 5pixels)
+                                     <div className="col-6"> // col-6 (column that takes 6 spaces out of 12 total)
+                                         <div className="d-flex"> // d-flex ??
+                                             <input type="search" className="form-control me-2"  placeholder='Search' aria-labelledby='Search'  //form-control,me-2,aria-labelledby ??
+                                             onChange={e => setSearch(e.target.value)}/>
+                                             // now this is very important! When I type something in the input field, the OnChange function sets the search state var. to what was entered in the input field.
+                                             <button className="btn btn-outline-success" onClick={() => searchHandleChange()}>Search</button> //btn-outline-success is a green outline button from BootStrap
+                                             //the onClick eventListener activates the searchHandleChange we discussed above.
+                                         </div>
+                                     </div>
+                                     <div className="col-4"> // another col , that will take 4 of the 6 spaces left(because the other col is col-6)
+                                         <div className="dropdown">//this is a button with a dropdown list of items. Not fully implemented yet
+                                             <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">Category</button>
+                                             <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                                 <li>
+                                                     <a href="#" className="dropdown-item">ALL</a>
+                                                 </li>
+                                                 <li>
+                                                     <a href="#" className="dropdown-item">Front End</a>
+                                                 </li>
+                                                 <li>
+                                                     <a href="#" className="dropdown-item"> Back End</a>
+                                                 </li>
+                                                 <li>
+                                                     <a href="#" className="dropdown-item">Data</a>
+                                                 </li>
+                                                 <li>
+                                                     <a href="#" className="dropdown-item">DevOps</a>
+                                                 </li>
+                                             </ul>
+                                         </div>
+                                     </div>
+                                 </div>//end of row
+
+                                 <div className="mt-3">
+                                     <h5>Number of results:{totalAmountOfBooks}</h5> // dynamically display the totalAmountOfBooks state var.
+                                 </div>
+                                 <p>{indexOfFirstBook + 1} to {lastItem} of {totalAmountOfBooks} items:</p> // this displays the shown books , from first one to last found item on the current page??
+                                 {books.map(book => ( // we iterate through every book in books state var.
+                                     <SearchBook book={book} key={book.id}/> // and for each book , we're creating a new SearchBook component and we give it a prop of the current book
+                                 ))}
+                                 {totalPages > 1 && //
+                                   <Pagination currentPage={currentPage} totalPages={totalPages} paginate={paginate}/>
+                                 }
+                             </div>
+                           </div>
+                         </div>
+                     )
+                 }
