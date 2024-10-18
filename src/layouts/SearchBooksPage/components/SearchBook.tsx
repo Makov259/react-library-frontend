@@ -1,6 +1,5 @@
 import BookModel from "../../../models/BookModel";
 import React from "react";
-
 export const SearchBook: React.FC<{ book: BookModel }> = (props) => {
   return (
     <div className="card mt-3 shadow p-3 mb-3 bg-body rounded">
