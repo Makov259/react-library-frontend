@@ -6,9 +6,9 @@ export const SearchBook: React.FC<{ book: BookModel }> = (props) => {
       <div className="row g-0">
         <div className="col-md-2">
           <div className="d-none d-lg-block">
-            {props.book.img ? (
+            {props.book.img ? ( //if props.book.img has image do this
               <img src={props.book.img} width="123" height="196" alt="Book" />
-            ) : (
+            ) : ( //else do this
               <img
                 src={require("../../../Images/BooksImages/book-luv2code-1000.png")}
                 width="123"
@@ -18,7 +18,7 @@ export const SearchBook: React.FC<{ book: BookModel }> = (props) => {
             )}
           </div>
           <div className="d-lg-none d-flex justify-content-center align-items-center">
-            {props.book.img ? (
+            {props.book.img ? (  // why we have the same block of code?!?!?
               <img src={props.book.img} width="123" height="196" alt="Book" />
             ) : (
               <img

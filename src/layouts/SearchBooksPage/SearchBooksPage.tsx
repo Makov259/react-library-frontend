@@ -3,7 +3,6 @@ import BookModel from "../../models/BookModel";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { SearchBook } from "./components/SearchBook";
 import { Pagination } from "../Utils/Pagination";
-
 export const SearchBooksPage = () => {
 //1
 //-------------------------------------------STATE-VARIABLES-------------------------------------------------------------------------//
@@ -24,7 +23,7 @@ export const SearchBooksPage = () => {
         const fetchBooks = async () => {
 
             //2a
-            const baseUrl: string = "http://localhost:8080/api/books"; //my spring api
+            const baseUrl: string = "http://localhost:8080/api/books"; //my springBoot api
             let url: string = '';
 
             //2b
@@ -56,17 +55,17 @@ export const SearchBooksPage = () => {
             const loadedBooks: BookModel[] = [];
             //we create a BookModel array to store the fetched book array from the API
 
-            for(const key in responseData){
+            for(const currentBook in responseData){
                 loadedBooks.push(
                     {
-                    id: responseData[key].id,
-                    title: responseData[key].title,
-                    author: responseData[key].author,
-                    description: responseData[key].description,
-                    copies: responseData[key].copies,
-                    copiesAvailable: responseData[key].copiesAvailable,
-                    category: responseData[key].category,
-                    img: responseData[key].img
+                    id: responseData[currentBook].id,
+                    title: responseData[currentBook].title,
+                    author: responseData[currentBook].author,
+                    description: responseData[currentBook].description,
+                    copies: responseData[currentBook].copies,
+                    copiesAvailable: responseData[currentBook].copiesAvailable,
+                    category: responseData[currentBook].category,
+                    img: responseData[currentBook].img
                 }
                 )
             }//For each index (or book object), you're creating a new object that matches the structure of the BookModel class. 
@@ -82,7 +81,6 @@ export const SearchBooksPage = () => {
         window.scrollTo(0, 0);
     }, [currentPage, searchUrl]);
 //-----------------------------------------------------------------------------------------------------------------------------------//
-
 //3
 //--------------------------------------------------------USEFUL-STUFF---------------------------------------------------------------//
     //3a
@@ -125,14 +123,21 @@ export const SearchBooksPage = () => {
                 <div className="row mt-5">
                     <div className="col-6">
                         <div className="d-flex">
-                            <input type="search" className="form-control me-2"  placeholder='Search' aria-labelledby='Search' 
-                            onChange={e => setSearch(e.target.value)}/>
+                            <input type="search"
+                                   className="form-control me-2"
+                                   placeholder='Search'
+                                   aria-labelledby='Search'
+                                   onChange={e => setSearch(e.target.value)}
+                                   onKeyDown={e => {if(e.key === 'Enter'){
+                                       searchHandleChange();
+                                   }}}
+                            />
                             <button className="btn btn-outline-success" onClick={() => searchHandleChange()}>Search</button>
                         </div>
                     </div>
                     <div className="col-4">
                         <div className="dropdown">
-                            <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">Category</button>
+                            <button className="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">Category</button>
                             <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                 <li>
                                     <a href="#" className="dropdown-item">ALL</a>
