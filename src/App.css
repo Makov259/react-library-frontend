@@ -38,7 +38,7 @@ background-color: #0e76a8 ;
 .lost-image {
     background-image: url("./Images/PublicImages/image-3.jpg");
     height: 25em !important;
-    width: "720"
+    width: "720";
 }
 
 .homepage-carousel-title {
@@ -55,3 +55,7 @@ background-color: #0e76a8 ;
     pointer-events: none;
     cursor: default;
  }
+
+.btn {
+    --bs-btn-hover-border-color: #0e76a8; /* Or a specific color if needed */
+}
