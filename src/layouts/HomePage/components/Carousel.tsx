@@ -1,7 +1,6 @@
 import { ReturnBook } from "./ReturnBook";
 import { useEffect, useState } from "react";
 import BookModel from "../../../models/BookModel";
-import { error } from "console";
 import { SpinnerLoading } from "../../Utils/SpinnerLoading";
 import {Link} from "react-router-dom";
 
@@ -15,7 +14,7 @@ export const Carousel = () => {
         const fetchBooks = async () => {
 
             const baseUrl: string = "http://localhost:8080/api/books";
-            const url: string = `${baseUrl}?page=0&size=9`;
+            const url: string = `${baseUrl}?page=0&size=9`; //Simply will return the first 9 books.
 
             const response = await fetch(url);
             //This line makes the network request to fetch data from the API.
@@ -47,7 +46,7 @@ export const Carousel = () => {
                     category: responseData[key].category,
                     img: responseData[key].img
                 })
-            }//For each index (or book object), you're creating a new object that matches the structure of the BookModel class. 
+            }//For each index (or book object), we're creating a new object that matches the structure of the BookModel class.
             //You're taking values like id, title, author, etc., from each book in responseData.
             setBooks(loadedBooks);
             setIsLoading(false);
@@ -56,14 +55,14 @@ export const Carousel = () => {
             setIsLoading(false);
             setHttpError(error.message);
         })
-    }, []);// this [] at the end is called the dependency array, which , if empty, means that the logic inside the useEffect will run only once after the component renders
+    }, []);// this [] at the end is called the dependency array, which , if empty, means
+    // that the logic inside the useEffect will run only once after the component renders
 
     if(isLoading){
         return(
             <SpinnerLoading/>
         )
     }
-
     if(httpError){
         return(
             <div className="container m-5">
@@ -72,15 +71,12 @@ export const Carousel = () => {
         )
     }
 
-
-
     return(
        <div className="container mt-5" style={{height: 550}}>
         <div className="homepage-carousel-title">
             <h3>Find your next "I stayed up too late reading" book.</h3>
         </div> 
         <div className="carousel carousel-dark slide mt-5 d-none d-lg-block" id="carouselExampleControls" data-bs-interval="false">
-
             {/* Desktop */}
             <div className="carousel-inner">
                 <div className="carousel-item active">
@@ -111,7 +107,7 @@ export const Carousel = () => {
                 </button>
                 <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
                     <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span className="visually-hidden">Previous</span>
+                    <span className="visually-hidden">Next</span>
                 </button>
             </div>
                 {/* Mobile */}

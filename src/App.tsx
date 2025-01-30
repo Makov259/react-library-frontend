@@ -16,18 +16,11 @@ const oktaAuth = new OktaAuth(oktaConfig);
 
 export const App = () => {
 
-    const customAuthHandler = () => {
-         history.push('/login');
-    }
+    const customAuthHandler = () => {history.push('/login');}
     const history = useHistory();
-
     const restoreOriginalUri = async (_oktaAuth: any, originalUri: any)=> {
         history.replace(toRelativeUrl(originalUri || '/', window.location.origin));
     };
-
-
-
-
 
     return (
         <div className="d-flex flex-column min-vh-100">

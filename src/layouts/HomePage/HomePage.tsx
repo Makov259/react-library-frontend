@@ -1,6 +1,6 @@
 import { Carousel } from "./components/Carousel";
 import { ExploreTopBooks } from "./components/ExploreTopBooks";
-import { Heros } from "./components/Heros";
+import { Heroes } from "./components/Heroes";
 import { LibraryServices } from "./components/LibraryServices";
 
 export const HomePage = () => {
@@ -8,7 +8,7 @@ export const HomePage = () => {
         <>
         <ExploreTopBooks/>
         <Carousel/>
-        <Heros/>
+        <Heroes/>
         <LibraryServices/>
         </>
     );
