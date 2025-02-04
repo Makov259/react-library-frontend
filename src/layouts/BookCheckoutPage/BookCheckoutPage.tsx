@@ -94,17 +94,13 @@ export const BookCheckoutPage = () => {
                     });
                 weightedStarReviews = weightedStarReviews + responseData[key].rating;
             }
-
             if(loadedReviews){
                 const round = (Math.round((weightedStarReviews / loadedReviews.length) * 2) / 2).toFixed(1);
                 setTotalStars(Number(round));
             }
-
             setReviews(loadedReviews);
             setIsLoadingReview(false);
         };
-
-
         fetchBookReviews().catch((error: any) => {
             setIsLoadingReview(false);
             setHttpError(error.message);
